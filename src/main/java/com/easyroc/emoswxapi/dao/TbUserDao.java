@@ -2,7 +2,6 @@ package com.easyroc.emoswxapi.dao;
 
 import com.easyroc.emoswxapi.pojo.TbUser;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.shiro.crypto.hash.Hash;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -37,6 +36,14 @@ public interface TbUserDao {
      * @return
      */
     Set<String> searchUserPermissions(int userId);
+
+    /**
+     * 查询用户信息
+     * @param userId
+     * @return
+     */
+    TbUser searchById(int userId);
+
 
 
 }

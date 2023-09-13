@@ -8,6 +8,8 @@ import com.easyroc.emoswxapi.controller.form.RegisterForm;
 import com.easyroc.emoswxapi.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -55,6 +57,8 @@ public class UserController {
         saveCacheToken(token, id);
         return R.ok("登陆成功").put("token", token).put("permission", permsSet);
     }
+
+
 
 
     private void saveCacheToken(String token, int userId) {

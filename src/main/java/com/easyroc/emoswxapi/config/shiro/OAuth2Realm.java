@@ -1,5 +1,7 @@
 package com.easyroc.emoswxapi.config.shiro;
 
+import com.easyroc.emoswxapi.pojo.TbUser;
+import com.easyroc.emoswxapi.service.UserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -14,6 +16,9 @@ import java.util.Set;
 public class OAuth2Realm extends AuthorizingRealm {
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
 
@@ -26,22 +31,33 @@ public class OAuth2Realm extends AuthorizingRealm {
      * 授权(验证权限时调用)
      */
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection collection) {
+        TbUser user = (TbUser) collection.getPrimaryPrincipal();
+        int userId = user.getId();
+        //用户权限列表
+        Set<String> permsSet = userService.searchUserPermissions(userId);
 
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        //TODO 查询用户的权限列表
-        //TODO 把权限列表添加到info对象中
+        info.setStringPermissions(permsSet);
         return info;
     }
+
 
     /**
      * 认证(登录时调用)
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        //TODO 从令牌中获取userId，然后检测该账户是否被冻结。
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo();
-        //TODO 往info对象中添加用户信息、Token字符串
+        String accessToken = (String) token.getPrincipal();
+        int userId = jwtUtil.getUserId(accessToken);
+        //查询用户信息
+        TbUser user = userService.searchById(userId);
+        if (user == null) {
+            throw new LockedAccountException("账号已被锁定,请联系管理员");
+        }
+
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, accessToken, getName());
         return info;
     }
+
 }

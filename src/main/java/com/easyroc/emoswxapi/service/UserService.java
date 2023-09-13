@@ -1,5 +1,7 @@
 package com.easyroc.emoswxapi.service;
 
+import com.easyroc.emoswxapi.pojo.TbUser;
+
 import java.util.Set;
 
 public interface UserService {
@@ -30,6 +32,7 @@ public interface UserService {
      */
     Integer login(String code);
 
+    TbUser searchById(int userId);
 
 
 }

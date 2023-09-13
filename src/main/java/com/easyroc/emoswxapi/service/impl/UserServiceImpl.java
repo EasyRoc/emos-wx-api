@@ -5,6 +5,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.easyroc.emoswxapi.dao.TbUserDao;
 import com.easyroc.emoswxapi.exception.EmosException;
+import com.easyroc.emoswxapi.pojo.TbUser;
 import com.easyroc.emoswxapi.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,13 @@ public class UserServiceImpl implements UserService {
         //TODO 从消息队列中接收消息，转移到消息表
         return id;
     }
+
+    @Override
+    public TbUser searchById(int userId) {
+        TbUser user = userDao.searchById(userId);
+        return user;
+    }
+
 
 
 }

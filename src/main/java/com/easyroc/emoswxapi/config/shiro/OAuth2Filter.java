@@ -1,6 +1,5 @@
 package com.easyroc.emoswxapi.config.shiro;
 
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -111,7 +110,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
                 return false;
             }
 
-        } catch (JWTDecodeException e) {
+        } catch (Exception e) {
             resp.setStatus(HttpStatus.SC_UNAUTHORIZED);
             resp.getWriter().print("无效的令牌");
             return false;
